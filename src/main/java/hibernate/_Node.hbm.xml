@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.aplikata.bo">
+	<class name="Node" table="_node">
+		<id name="id" type="java.lang.Long">
+			<column name="ID" />
+			<generator class="native" />
+		</id>
+
+		<many-to-one name="parent" class="com.aplikata.bo.Node"
+			fetch="select">
+			<column name="PARENT_ID" />
+		</many-to-one>
+
+		<property name="type" type="int">
+			<column name="TYPE" />
+		</property>
+
+		<property name="label" type="java.lang.String">
+			<column name="LABEL" length="40" />
+		</property>
+
+		<property name="url" type="java.lang.String">
+			<column name="DESCRIPTION" length="150" />
+		</property>
+
+		<property name="sort" type="int">
+			<column name="SORT" />
+		</property>
+
+		<property name="level" type="int">
+			<column name="LEVEL" />
+		</property>
+		
+		<property name="icon" type="java.lang.String">
+			<column name="ICON" length="45" />
+		</property>
+	</class>
+	
+	<query name="Node.findAllMenus">
+		from Node n where n.type=1 order by n.level, n.sort
+	</query>
+
+	<sql-query name="Node.findUserNodes">
+		<return alias="n" class="com.aplikata.bo.Node" />
+		SELECT n.*
+		FROM _role r, _access a, _node n, _user u
+		WHERE n.type = ?
+		AND a.role_id = r.id
+		AND a.node_id = n.id
+		AND u.role_id = r.id
+		AND u.id =
+		?
+		ORDER BY n.level, n.parent_id, n.sort
+	</sql-query>
+
+	<sql-query name="Node.getUserFirstMenu">
+		<return alias="n" class="com.aplikata.bo.Node" />
+		SELECT n.*
+		FROM _access acc, _node n, _role r, _user u
+		WHERE acc.role_id = r.id
+		AND acc.node_id = n.id
+		AND u.role_id = r.id
+		AND u.id = ?
+		AND n.type = 1
+		AND n.description != ''
+		ORDER BY  n.sort limit 1
+	</sql-query>
+</hibernate-mapping>

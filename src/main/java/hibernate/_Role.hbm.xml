@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.aplikata.bo">
+	<class name="Role" table="_role">
+		<id name="id" type="java.lang.Long">
+			<column name="ID" />
+			<generator class="native" />
+		</id>
+
+		<property name="name" type="java.lang.String" column="name"/>
+		<property column="protect_url" name="protectUrl" type="string" />
+		<property column="grade" name="grade" type="int" />
+	</class>
+
+	<query name="Role.findGreaterGrade">
+		<![CDATA[
+			from Role r where r.grade >= ? order by r.name
+		]]>
+	</query>
+
+	<sql-query name="Role.findGreateGradeByUser">
+		<return alias="r" class="com.aplikata.bo.Role" />
+		select r.* from _user u, _role ru, _role r
+		where u.role_id=ru.id and r.grade >= ru.grade and u.id=?
+		order by r.name
+	</sql-query>
+
+	<sql-query name="Role.findGreateGradeByDomain">
+		<return alias="r" class="com.aplikata.bo.Role" />
+		SELECT r.*
+		FROM _role r, _domain_role dr
+		WHERE r.id = dr.role_id
+		AND
+		dr.domain_id = ?
+		AND r.grade >= ?
+		order by r.name
+	</sql-query>
+</hibernate-mapping>
