@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.aplikata.bo.Domain;
+import com.aplikata.bo.Role;
 import com.aplikata.service.DomainService;
 
 @Path("domains")
@@ -71,4 +72,17 @@ public class DomainResource {
 			return null;
 		}
     }
+    
+	
+	@GET
+	@Path("roles/{domainId}")
+	public List<Role> getRoles(@PathParam("domainId") String domainId) {
+		try {
+			List<Role> list = domainService.getDomainRoles(Long.parseLong(domainId));
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}	
+	}
 }

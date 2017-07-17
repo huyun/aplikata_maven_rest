@@ -13,7 +13,8 @@ public class Role implements java.io.Serializable {
 	public final static String QY_FIND_GREATER_GRADE = "Role.findGreaterGrade";
 	public final static String QY_FIND_DOMAIN_GREATER_GRADE = "Role.findGreateGradeByDomain";
 	public final static String QY_FIND_USER_GREATER_GRADE = "Role.findGreateGradeByUser";
-
+	public final static String QY_FIND_BY_DOMAIN = "Role.findByDomain";
+	
 	public Role() {
 	}
 

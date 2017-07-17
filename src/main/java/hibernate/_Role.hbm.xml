@@ -37,4 +37,13 @@
 		AND r.grade >= ?
 		order by r.name
 	</sql-query>
+	
+	<sql-query name="Role.findByDomain">
+		<return alias="r" class="com.aplikata.bo.Role" />
+		select r.* 
+		from _domain_role dr, _role r 
+		where dr.role_id=r.id and dr.domain_id=?
+		order by r.name
+	</sql-query>
+	
 </hibernate-mapping>

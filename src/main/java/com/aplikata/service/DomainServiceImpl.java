@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.aplikata.bo.Domain;
+import com.aplikata.bo.Role;
 
 @Service("domainService")
 public class DomainServiceImpl extends PublicServiceImpl implements DomainService {
@@ -37,4 +38,12 @@ public class DomainServiceImpl extends PublicServiceImpl implements DomainServic
 		return (List<Domain>) getAll(Domain.class);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Role> getDomainRoles(long domainId) {
+		if (domainId <= 0) {
+			return null;
+		}
+		return getPublicDao().findByNamedQuery(Role.QY_FIND_BY_DOMAIN, new Object[] { domainId });
+	}
 }

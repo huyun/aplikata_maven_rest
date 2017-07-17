@@ -68,4 +68,12 @@
 		AND n.description != ''
 		ORDER BY  n.sort limit 1
 	</sql-query>
+	
+	<sql-query name="Node.findByRole">
+		<return alias="n" class="com.aplikata.bo.Node" />
+		SELECT n.* 
+		FROM _access a, _node n 
+		where a.node_id=n.id
+		and n.type=1 and a.role_id=? order by level, sort
+	</sql-query>
 </hibernate-mapping>

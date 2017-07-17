@@ -20,6 +20,7 @@ public class Node implements Serializable, Comparator<Node> {
 	private List<NodeItem> items;
 	public final static String QY_FIND_USER_NODES = "Node.findUserNodes";
 	public final static String QY_FIND_ALL_MENUS = "Node.findAllMenus";
+	public final static String QY_FIND_BY_ROLE = "Node.findByRole";
 
 	public Node() {
 	}

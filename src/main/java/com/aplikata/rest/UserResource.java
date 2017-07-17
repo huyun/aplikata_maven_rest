@@ -48,10 +48,10 @@ public class UserResource {
 				user.setToken(token);
 			}
 
-			return Response.ok(user).header("Content-Type", "application/json;charset=UTF-8").build();
+			return Response.ok(user).build();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Response.status(Response.Status.UNAUTHORIZED).build();
+			return Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build();
 		}
 	}
 
