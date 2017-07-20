@@ -10,6 +10,7 @@ public class MyApplication extends ResourceConfig {
 		register(UserResource.class);
 		register(MenuResource.class);
 		register(RoleResource.class);
+		register(EnumResource.class);
 		register(CORSResponseFilter.class);
 	}
 }

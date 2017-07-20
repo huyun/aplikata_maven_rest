@@ -31,4 +31,11 @@
             <column name="SORT" />
         </property>
     </class>
+    <query name="Parameter.getAllParentEnum">
+    	from Parameter p where p.type=1 and p.parent=null order by p.name
+    </query>
+    
+    <query name="Parameter.getChildrenEnum">
+    	from Parameter p where p.type=1 and p.parent.id=? order by p.sort
+    </query>
 </hibernate-mapping>

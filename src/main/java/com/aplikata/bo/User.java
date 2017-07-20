@@ -36,6 +36,8 @@ public class User implements java.io.Serializable {
 	public final static String LB_USER_PWD = "login_password";
 	public final static String LB_USER_NEWPWD = "login_new_password";
 	public final static String LB_USER_CONFIRMPWD = "login_confim_password";
+	
+	public final static String QY_FIND_ALL = "User.findAll";
 
 	public User() {
 	}

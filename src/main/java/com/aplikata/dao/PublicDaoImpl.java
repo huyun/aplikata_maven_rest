@@ -6,10 +6,12 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -48,8 +50,13 @@ public class PublicDaoImpl<M extends Serializable, PK extends Serializable> exte
 	}
 
 	@Override
-	public void update(M model) {
-		getHibernateTemplate().update(model);
+	public M update(M model) {
+		//getHibernateTemplate().update(model);
+		Session session = getSessionFactory().getCurrentSession();
+        session.clear();
+        session.update( model );
+        session.flush();
+        return model;
 	}
 
 	@Override
@@ -87,13 +94,6 @@ public class PublicDaoImpl<M extends Serializable, PK extends Serializable> exte
 	@Override
 	public List<M> getAll(Class<M> targetEntityClass) {
 		return getHibernateTemplate().loadAll(targetEntityClass);
-		/*
-		 * Session session = sessionFactory.getCurrentSession();
-		 * CriteriaQuery<M> cq =
-		 * session.getCriteriaBuilder().createQuery(targetEntityClass);
-		 * cq.from(targetEntityClass); return
-		 * session.createQuery(cq).getResultList();
-		 */
 	}
 
 	@SuppressWarnings("unchecked")
@@ -108,9 +108,14 @@ public class PublicDaoImpl<M extends Serializable, PK extends Serializable> exte
 		if (propertyValue instanceof Date) {
 			propertyValue = YunDateUtil.formatDate((Date) propertyValue, "yyyy-MM-dd");
 		}
-		TypedQuery<M> query = getSessionFactory().getCurrentSession().createQuery(queryString)
-				.setParameter("value", propertyValue);
-		return query.setMaxResults(1).getSingleResult();
+		try {
+
+			TypedQuery<M> query = getSessionFactory().getCurrentSession().createQuery(queryString) 
+					.setParameter("value", propertyValue);
+			return query.setMaxResults(1).getSingleResult();
+		} catch (NoResultException nre) {
+			return null;
+		}
 	}
 
 	@Override
@@ -128,5 +133,11 @@ public class PublicDaoImpl<M extends Serializable, PK extends Serializable> exte
 	@Override
 	public List<M> findByNamedQuery(String queryName, Object[] values) {
 		return (List<M>) getHibernateTemplate().findByNamedQuery(queryName, values);
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public NativeQuery getSQLQuery(String sql) {
+		return getSessionFactory().getCurrentSession().createNativeQuery(sql);
 	}
 }

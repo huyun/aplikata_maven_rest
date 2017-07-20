@@ -44,4 +44,7 @@
 			<column name="ROLE_NAME" length="45" />
 		</property>
 	</class>
+	<query name="User.findAll">
+		from User u order by u.userName
+	</query>
 </hibernate-mapping>

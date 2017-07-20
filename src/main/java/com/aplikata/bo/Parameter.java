@@ -2,6 +2,9 @@ package com.aplikata.bo;
 
 public class Parameter implements java.io.Serializable {
 
+	public final static String QY_ENUM_PARENT = "Parameter.getAllParentEnum";
+	public final static String QY_ENUM_CHILDREN = "Parameter.getChildrenEnum";
+
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private Parameter parent;

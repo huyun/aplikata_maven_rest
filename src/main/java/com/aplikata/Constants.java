@@ -16,4 +16,5 @@ public class Constants {
 	public static final String DEFAULT_USER_PASSWORD = "123456";
 	
 	public static final int NODE_TYPE_MENU = 1;
+	public static final int PARA_ENUM = 1;
 }

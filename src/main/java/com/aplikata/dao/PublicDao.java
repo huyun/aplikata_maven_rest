@@ -3,6 +3,8 @@ package com.aplikata.dao;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.query.NativeQuery;
+
 /**
  * @author Huyun
  * @version 1.0
@@ -13,7 +15,7 @@ public interface PublicDao<M extends Serializable, PK extends Serializable> {
 
 	Serializable add(M model);
 
-	void update(M model);
+	M update(M model);
 
 	M delete(M model);
 
@@ -23,10 +25,6 @@ public interface PublicDao<M extends Serializable, PK extends Serializable> {
 
 	M get(Class<M> targetEntityClass, long id);
 
-	List<M> getAll();
-
-	List<M> getAll(Class<M> targetEntityClass);
-
 	M getUniqueByProperty(Class<M> className, String propertyName, Object propertyValue);
 
 	M getUniqueByProperty(String propertyName, Object propertyValue);
@@ -34,5 +32,12 @@ public interface PublicDao<M extends Serializable, PK extends Serializable> {
 	List<M> findByNamedQuery(String queryName);
 
 	List<M> findByNamedQuery(String queryName, Object[] values);
+
+	List<M> getAll();
+
+	List<M> getAll(Class<M> targetEntityClass);
+
+	@SuppressWarnings("rawtypes")
+	NativeQuery getSQLQuery(String sql);
 
 }
