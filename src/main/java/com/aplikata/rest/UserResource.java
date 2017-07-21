@@ -14,7 +14,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,29 +35,24 @@ public class UserResource {
 
 	@POST
 	@Path("login")
-	public Response submitLogin(User user) {
-		try {
-			user = userService.updateLogin(user.getUserName(), user.getUserPwd());
-			user.setUserPwd(null);
-			GsonBuilder gb = new GsonBuilder();
-			gb.registerTypeAdapterFactory(HibernateProxyTypeAdapter.FACTORY);
-			Gson gson = gb.create();
+	public User submitLogin(User user) {
+		user = userService.updateLogin(user.getUserName(), user.getUserPwd());
+		user.setUserPwd(null);
+		GsonBuilder gb = new GsonBuilder();
+		gb.registerTypeAdapterFactory(HibernateProxyTypeAdapter.FACTORY);
+		Gson gson = gb.create();
 
-			String token = Jwts.builder().setSubject(gson.toJson(user))
-					.signWith(SignatureAlgorithm.HS512, TOKEN_SECRET).compact();
+		String token = Jwts.builder().setSubject(gson.toJson(user)).signWith(SignatureAlgorithm.HS512, TOKEN_SECRET)
+				.compact();
 
-			if (StringUtils.isBlank(user.getUserPwdOld())) {
-				user.setFirstUrl("/loginpwd");
-				user.setToken(null);
-			} else if (user.getUserName().equals(Constants.SUPER_ADMIN)) {
-				user.setToken(token);
-			}
-
-			return Response.ok(user).build();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build();
+		if (StringUtils.isBlank(user.getUserPwdOld())) {
+			user.setFirstUrl("/loginpwd");
+			user.setToken(null);
+		} else if (user.getUserName().equals(Constants.SUPER_ADMIN)) {
+			user.setToken(token);
 		}
+
+		return user;
 	}
 
 	@GET
@@ -69,11 +63,11 @@ public class UserResource {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		}	
+		}
 	}
-	
+
 	@POST
-	public User saveUser(User user){
+	public User saveUser(User user) {
 		try {
 			return userService.updateUser(user);
 		} catch (Exception e) {
@@ -81,9 +75,9 @@ public class UserResource {
 			return null;
 		}
 	}
-	
+
 	@PUT
-	public User updateUser(User user){
+	public User updateUser(User user) {
 		try {
 			return userService.updateUser(user);
 		} catch (Exception e) {
@@ -91,7 +85,7 @@ public class UserResource {
 			return null;
 		}
 	}
-	
+
 	@DELETE
 	@Path("/{userId}")
 	public User removeUser(@PathParam("userId") long id) {

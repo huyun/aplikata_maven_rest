@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.aplikata.bo.User;
 
-public interface UserService extends PublicService{
+public interface UserService extends PublicService {
 
-	User updateLogin(String userName, String userPwd) throws Exception;
+	User updateLogin(String userName, String userPwd) ;
 
 	List<User> getAllUsers();
 

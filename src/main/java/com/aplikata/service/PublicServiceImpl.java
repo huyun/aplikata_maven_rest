@@ -23,7 +23,7 @@ public class PublicServiceImpl implements PublicService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Long add(Serializable model) throws Exception{
+	public Long add(Serializable model) {
 		return (Long) publicDao.add(model);
 	}
 

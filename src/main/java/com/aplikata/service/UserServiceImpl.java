@@ -18,6 +18,9 @@ import com.aplikata.bo.NodeItem;
 import com.aplikata.bo.User;
 import com.aplikata.encoder.MD5PasswordEncoder;
 import com.aplikata.encoder.PasswordEncoder;
+import com.aplikata.exception.ExceptionCode;
+import com.aplikata.exception.RequiredException;
+import com.aplikata.exception.ServiceException;
 import com.aplikata.rest.RESTUtil;
 import com.aplikata.util.YunDateUtil;
 import com.google.gson.Gson;
@@ -32,30 +35,30 @@ public class UserServiceImpl extends PublicServiceImpl implements UserService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public User updateLogin(String userName, String userPwd) throws Exception {
+	public User updateLogin(String userName, String userPwd) {
 		User user = null;
 		if (StringUtils.isBlank(userName)) {
-			throw new Exception(RESTUtil.getRequiredMsg(messageSource, User.LB_USER_NAME));
+			throw new RequiredException(User.LB_USER_NAME);
 		}
 		if (StringUtils.isBlank(userPwd)) {
-			throw new Exception(RESTUtil.getRequiredMsg(messageSource, User.LB_USER_PWD));
+			throw new RequiredException(User.LB_USER_PWD);
 		}
 		user = (User) getPublicDao().getUniqueByProperty(User.class, User.USER_NAME, userName);
 		if (user == null) {
-			throw new Exception(RESTUtil.getMsg(messageSource, Constants.MSG_LOGIN_BAD_NAME_PWD));
+			throw new ServiceException(ExceptionCode.USER_NOT_FOUND);
 		}
 
 		PasswordEncoder encoder = new MD5PasswordEncoder();
 		if (!encoder.encode(userPwd).equals(user.getUserPwd())) {
-			throw new Exception(RESTUtil.getMsg(messageSource, Constants.MSG_LOGIN_BAD_NAME_PWD));
+			throw new ServiceException(ExceptionCode.USER_NOT_FOUND);
 		}
 
 		if (user.isBlocked()) {
-			throw new Exception(RESTUtil.getMsg(messageSource, Constants.MSG_LOGIN_STATUSNOTNORMAL));
+			throw new ServiceException(ExceptionCode.USER_NOT_FOUND);
 		}
 
 		if (user.getDomain() != null && user.getDomain().isBlocked()) {
-			throw new Exception(RESTUtil.getMsg(messageSource, Constants.MSG_LOGIN_STATUSNOTNORMAL));
+			throw new ServiceException(ExceptionCode.USER_NOT_FOUND);
 		}
 		Node node = (Node) getPublicDao().findByNamedQuery("Node.getUserFirstMenu", new Object[] { user.getId() }).get(
 				0);
